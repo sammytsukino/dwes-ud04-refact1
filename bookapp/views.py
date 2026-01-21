@@ -8,7 +8,9 @@ from bookapp.forms import BookForm
 from bookapp.models import Book
 
 # Create your views here.
-class BookCreate(LoginRequiredMixin, CreateView):
+class BookCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    # Bug: la creación de libros debe requerir el permiso add_book (grupo Admin)
+    permission_required = 'bookapp.add_book'
     model = Book
     form_class = BookForm
     template_name = 'bookapp/form.html'
@@ -19,14 +21,16 @@ class BookList(ListView):
     context_object_name = 'books'
     template_name = 'bookapp/list.html'
 
-class BookUpdate(PermissionRequiredMixin, UpdateView):
+class BookUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    # Bug: la edición de libros debe requerir usuario autenticado y permiso change_book
     permission_required = 'bookapp.change_book'
     model = Book
     form_class = BookForm
     template_name = 'bookapp/form.html'
     success_url = reverse_lazy('book_list')
 
-class BookDelete(PermissionRequiredMixin, DeleteView):
+class BookDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    # Bug: el borrado de libros debe requerir usuario autenticado y permiso delete_book
     permission_required = 'bookapp.delete_book'
     model = Book
     template_name = 'bookapp/confirm_delete.html'
