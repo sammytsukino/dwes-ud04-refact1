@@ -296,36 +296,36 @@ class BookViewTest(TestCase):
 
     def test_edit_admin(self):
         self.client.login(username="admin", password="admin")
-        url = reverse("book_edit", kwargs={"pk": self.book.id})
+        url = reverse("book_edit", kwargs={"pk": 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_edit_other(self):
         self.client.login(username="other", password="other")
-        url = reverse("book_edit", kwargs={"pk": self.book.id})
+        url = reverse("book_edit", kwargs={"pk": 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
     def test_delete_admin(self):
         self.client.login(username="admin", password="admin")
-        url = reverse("book_delete", kwargs={"pk": self.book.id})
+        url = reverse("book_delete", kwargs={"pk": 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_delete_other(self):
         self.client.login(username="other", password="other")
-        url = reverse("book_delete", kwargs={"pk": self.book.id})
+        url = reverse("book_delete", kwargs={"pk": 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
     def test_detail_admin(self):
         self.client.login(username="admin", password="admin")
-        url = reverse("book_detail", kwargs={"pk": self.book.id})
+        url = reverse("book_detail", kwargs={"pk": 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_detail_other(self):
         self.client.login(username="other", password="other")
-        url = reverse("book_detail", kwargs={"pk": self.book.id})
+        url = reverse("book_detail", kwargs={"pk": 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
