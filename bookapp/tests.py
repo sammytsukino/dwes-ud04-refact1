@@ -280,7 +280,7 @@ class BookViewTest(TestCase):
         self.client.login(username="other", password="other")
         url = reverse("form")
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 403)
 
     def test_list_admin(self):
         self.client.login(username="admin", password="admin")
@@ -304,7 +304,7 @@ class BookViewTest(TestCase):
         self.client.login(username="other", password="other")
         url = reverse("book_edit", kwargs={"pk": 1})
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 403)
 
     def test_delete_admin(self):
         self.client.login(username="admin", password="admin")
@@ -316,7 +316,7 @@ class BookViewTest(TestCase):
         self.client.login(username="other", password="other")
         url = reverse("book_delete", kwargs={"pk": 1})
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 403)
 
     def test_detail_admin(self):
         self.client.login(username="admin", password="admin")
