@@ -2,16 +2,22 @@
 
 {% block content %}
 <h3>Book stats</h3>
-<ul>
-    <li>Book with most pages: {% if most_pages %}{{ most_pages.title }}{% else %}N/A{% endif %}</li>
-    <li>Book with least pages: {% if least_pages %}{{ least_pages.title }}{% else %}N/A{% endif %}</li>
-    <li>Average pages: {{ avg_pages|default:"N/A" }}</li>
+<ul class="mb-6 bg-white border-2 border-black rounded-lg p-6 max-w-lg mx-auto">
+    <li class="mb-2 text-black font-semibold">Book with most pages: <span class="font-bold">{% if most_pages %}{{ most_pages.title }}{% else %}N/A{% endif %}</span></li>
+    <li class="mb-2 text-black font-semibold">Book with least pages: <span class="font-bold">{% if least_pages %}{{ least_pages.title }}{% else %}N/A{% endif %}</span></li>
+    <li class="text-black font-semibold">Average pages: <span class="font-bold">{{ avg_pages|default:"N/A" }}</span></li>
 </ul>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 
-<canvas width="400" id="statusChart"></canvas>
-<canvas width="400" id="ratingChart"></canvas>
+<div class="flex flex-col md:flex-row gap-8 justify-center items-center">
+    <div class="bg-white border-2 border-black rounded-lg p-4">
+        <canvas width="320" height="320" id="statusChart"></canvas>
+    </div>
+    <div class="bg-white border-2 border-black rounded-lg p-4">
+        <canvas width="320" height="320" id="ratingChart"></canvas>
+    </div>
+</div>
 
 <script>
 
@@ -21,7 +27,12 @@
             labels: {{ status_labels|safe }},
             datasets: [{
                 data: {{ status_values|safe }},
-                label: 'Total'
+                label: 'Total',
+                backgroundColor: [
+                    '#6366f1', // indigo-500
+                    '#a78bfa', // violet-400
+                    '#7c3aed'  // violet-600
+                ]
             }]
         },
         options: {
@@ -35,11 +46,20 @@
             labels: {{ rating_labels|safe }},
             datasets: [{
                 data: {{ rating_values|safe }},
-                label: 'Total'
+                label: 'Total',
+                backgroundColor: '#6366f1' // indigo-500
             }]
         },
         options: {
-            responsive: false
+            responsive: false,
+            scales: {
+                x: {
+                    ticks: { color: '#7c3aed', font: { weight: 'bold' } }
+                },
+                y: {
+                    ticks: { color: '#6366f1', font: { weight: 'bold' } }
+                }
+            }
         }
     })
     // ...existing code for statusChart and ratingChart...

@@ -1,11 +1,38 @@
 {% extends 'bookapp/layout.html' %}
 
 {% block content %}
-        <h2>{{ book.title }}</h2>
-        <p>Pages: {{ book.pages }}</p>
-        <p>Rating: {{ book.rating }}</p>
-        <p>Status: {{ book.status }}</p>
-        <p>Published date: {{ book.published_date }}</p>
-        <p>Read date: {{ book.read_date }}</p>
-        <a href="{% url 'book_list' %}">Back</a>
+<div class="max-w-lg mx-auto bg-white border-2 border-black rounded-lg shadow p-8 mt-8">
+        <h2 class="text-3xl font-black mb-4 text-black uppercase tracking-tight">{{ book.title }}</h2>
+        <dl class="divide-y divide-violet-100">
+                <div class="py-2 flex justify-between">
+                        <dt class="font-semibold text-black">Pages</dt>
+                        <dd>{{ book.pages }}</dd>
+                </div>
+                <div class="py-2 flex justify-between">
+                        <dt class="font-semibold text-black">Rating</dt>
+                        <dd>{{ book.rating }}</dd>
+                </div>
+                <div class="py-2 flex justify-between">
+                        <dt class="font-semibold text-black">Status</dt>
+                        <dd>{{ book.status }}</dd>
+                </div>
+                <div class="py-2 flex justify-between">
+                        <dt class="font-semibold text-black">Published date</dt>
+                        <dd>{{ book.published_date }}</dd>
+                </div>
+                <div class="py-2 flex justify-between">
+                        <dt class="font-semibold text-black">Read date</dt>
+                        <dd>{{ book.read_date }}</dd>
+                </div>
+        </dl>
+        <div class="mt-6 flex gap-2">
+                <a href="{% url 'book_list' %}" class="bg-violet-100 px-4 py-2 rounded hover:bg-blue-100 text-black">Back</a>
+                {% if perms.bookapp.change_book %}
+                <a href="{% url 'book_edit' book.pk %}" class="bg-blue-700 text-white px-4 py-2 rounded hover:bg-violet-700">Edit</a>
+                {% endif %}
+                {% if perms.bookapp.delete_book %}
+                <a href="{% url 'book_delete' book.pk %}" class="bg-violet-700 text-white px-4 py-2 rounded hover:bg-blue-700">Delete</a>
+                {% endif %}
+        </div>
+</div>
 {% endblock content %}
