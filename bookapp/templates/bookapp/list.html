@@ -1,23 +1,52 @@
 {% extends 'bookapp/layout.html' %}
 
 {% block content %}
-        <ul>
-            {% for book in books %}
-                <li>{{book.title}}</li>
-                {% if user.is_authenticated %}
-                <a href="{% url 'book_detail' book.pk %}">Details</a>
-                {% endif %}
-                {% if perms.bookapp.change_book %}
-                <a href="{% url 'book_edit' book.pk %}">Edit</a>
-                {% endif %}
-                {% if perms.bookapp.delete_book %}
-                <a href="{% url 'book_delete' book.pk %}">Delete</a>
-                {% endif %}
+        <form method="get">
+            <input type="text" name="q" value="{{ request.GET.q }}">
+            <button type="submit">Search</button>
+        </form>
+        <table>
+            <tr>
+                <th><a href="?sort=title&q={{ request.GET.q }}">Title</a></th>
+                <th><a href="?sort=pages&q={{ request.GET.q }}">Pages</a></th>
+                <th><a href="?sort=rating&q={{ request.GET.q }}">Rating</a></th>
+                <th><a href="?sort=status&q={{ request.GET.q }}">Status</a></th>
+                <th><a href="?sort=published_date&q={{ request.GET.q }}">Published date</a></th>
+            </tr>
+            {% for book in page_obj %}
+                <tr>
+                    <td>
+                        {{ book.title }}
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'book_detail' book.pk %}">Details</a>
+                        {% endif %}
+                        {% if perms.bookapp.change_book %}
+                        <a href="{% url 'book_edit' book.pk %}">Edit</a>
+                        {% endif %}
+                        {% if perms.bookapp.delete_book %}
+                        <a href="{% url 'book_delete' book.pk %}">Delete</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ book.pages }}</td>
+                    <td>{{ book.rating }}</td>
+                    <td>{{ book.status }}</td>
+                    <td>{{ book.published_date }}</td>
+                </tr>
             {% empty %}
-                There are no books
+                <tr>
+                    <td colspan="5">There are no books</td>
+                </tr>
             {% endfor %}
-        </ul>
+        </table>
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}">Previous</a>
+        {% endif %}
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}">Next</a>
+        {% endif %}
         {% if perms.bookapp.add_book %}
         <a href="{% url 'form' %}">New book</a>
         {% endif %}
+        <a href="{% url 'stats' %}">Stats</a>
 {% endblock content %}
