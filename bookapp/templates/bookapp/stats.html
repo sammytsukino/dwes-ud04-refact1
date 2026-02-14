@@ -10,24 +10,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 
-<canvas width="400" id="avgRating"></canvas>
 <canvas width="400" id="statusChart"></canvas>
 <canvas width="400" id="ratingChart"></canvas>
 
 <script>
-    new Chart(document.getElementById('avgRating'), {
-        type: 'bar',
-        data: {
-            labels: ['Average rating'],
-            datasets: [{
-                data: [{{ avg_rating|default:0 }}],
-                label: 'Average'
-            }]
-        },
-        options: {
-            responsive: false
-        }
-    })
 
     new Chart(document.getElementById('statusChart'), {
         type: 'pie',
@@ -56,5 +42,6 @@
             responsive: false
         }
     })
+    // ...existing code for statusChart and ratingChart...
 </script>
 {% endblock content %}
