@@ -1,52 +1,65 @@
 {% extends 'bookapp/layout.html' %}
 
 {% block content %}
-        <form method="get">
-            <input type="text" name="q" value="{{ request.GET.q }}">
-            <button type="submit">Search</button>
+        <form method="get" class="mb-4 flex gap-2">
+            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search by title" class="border border-gray-300 rounded px-3 py-2 w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Search</button>
         </form>
-        <table>
-            <tr>
-                <th><a href="?sort=title&q={{ request.GET.q }}">Title</a></th>
-                <th><a href="?sort=pages&q={{ request.GET.q }}">Pages</a></th>
-                <th><a href="?sort=rating&q={{ request.GET.q }}">Rating</a></th>
-                <th><a href="?sort=status&q={{ request.GET.q }}">Status</a></th>
-                <th><a href="?sort=published_date&q={{ request.GET.q }}">Published date</a></th>
-            </tr>
-            {% for book in page_obj %}
+        <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border-2 border-black divide-y-2 divide-black shadow">
+            <thead class="bg-gray-100">
                 <tr>
-                    <td>
-                        {{ book.title }}
+                    <th class="px-4 py-2 text-left"><a href="?sort=title&q={{ request.GET.q }}" class="hover:underline">Title</a></th>
+                    <th class="px-4 py-2 text-left"><a href="?sort=pages&q={{ request.GET.q }}" class="hover:underline">Pages</a></th>
+                    <th class="px-4 py-2 text-left"><a href="?sort=rating&q={{ request.GET.q }}" class="hover:underline">Rating</a></th>
+                    <th class="px-4 py-2 text-left"><a href="?sort=status&q={{ request.GET.q }}" class="hover:underline">Status</a></th>
+                    <th class="px-4 py-2 text-left"><a href="?sort=published_date&q={{ request.GET.q }}" class="hover:underline">Published date</a></th>
+                    <th class="px-4 py-2 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for book in page_obj %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-2 font-semibold">{{ book.title }}</td>
+                    <td class="px-4 py-2">{{ book.pages }}</td>
+                    <td class="px-4 py-2">{{ book.rating }}</td>
+                    <td class="px-4 py-2">{{ book.status }}</td>
+                    <td class="px-4 py-2">{{ book.published_date }}</td>
+                    <td class="px-4 py-2 flex gap-2">
                         {% if user.is_authenticated %}
-                        <a href="{% url 'book_detail' book.pk %}">Details</a>
+                        <a href="{% url 'book_detail' book.pk %}" class="text-blue-600 hover:underline">Details</a>
                         {% endif %}
                         {% if perms.bookapp.change_book %}
-                        <a href="{% url 'book_edit' book.pk %}">Edit</a>
+                        <a href="{% url 'book_edit' book.pk %}" class="text-yellow-600 hover:underline">Edit</a>
                         {% endif %}
                         {% if perms.bookapp.delete_book %}
-                        <a href="{% url 'book_delete' book.pk %}">Delete</a>
+                        <a href="{% url 'book_delete' book.pk %}" class="text-red-600 hover:underline">Delete</a>
                         {% endif %}
                     </td>
-                    <td>{{ book.pages }}</td>
-                    <td>{{ book.rating }}</td>
-                    <td>{{ book.status }}</td>
-                    <td>{{ book.published_date }}</td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="5">There are no books</td>
+                    <td colspan="6" class="text-center text-gray-400 py-8">There are no books</td>
                 </tr>
             {% endfor %}
+            </tbody>
         </table>
-        {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}">Previous</a>
-        {% endif %}
-        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}">Next</a>
-        {% endif %}
-        {% if perms.bookapp.add_book %}
-        <a href="{% url 'form' %}">New book</a>
-        {% endif %}
-        <a href="{% url 'stats' %}">Stats</a>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+            <div>
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Previous</a>
+                {% endif %}
+                <span class="mx-2">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&sort={{ request.GET.sort }}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+                {% endif %}
+            </div>
+            <div class="flex gap-2">
+                {% if perms.bookapp.add_book %}
+                <a href="{% url 'form' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">New book</a>
+                {% endif %}
+                <a href="{% url 'stats' %}" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Stats</a>
+            </div>
+        </div>
 {% endblock content %}
